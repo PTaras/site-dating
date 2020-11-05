@@ -1,8 +1,9 @@
 import React from 'react'
 
-import { Card, Pagination, Container, Row, Col} from 'react-bootstrap';
+import { Card, Pagination, Container, Row, Col, Form, ListGroup, Nav} from 'react-bootstrap';
 
 import FilterPosts from '../components/FilterResults';
+// import FilterGenderPosts from '../components/FilterGenderPosts';
 
 let active = 1;
 let items = [];
@@ -14,7 +15,7 @@ for (let number = 1; number <= 5; number++) {
   );
 };
 
-const Posts = ({ posts, onChange }) =>  {
+const Posts = ({ posts, onChange}) =>  {
   return (
     <Container>
       <Row className="text-center mt-2">
@@ -25,8 +26,7 @@ const Posts = ({ posts, onChange }) =>  {
       <Row>
       {posts.map((post) => {
         return (
-            <Card.Body>
-              
+            <Card.Body style={{backgroundColor: 'blue'}}>
                 <Card key={post.id} className="text-center">
                     <Card.Header> 
                       <b Style="float:left">{post.title} ({post.city}) </b>

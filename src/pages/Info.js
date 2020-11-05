@@ -18,14 +18,16 @@ export default class Info extends Component {
             posts: [],
             filteredPosts: [],
             filteredGender: [],
+            filteredCity: [],
+            checked: false
         };
     }
 
     componentDidMount() {
         fetch('http://127.0.0.1:5000/urls', {
+            // mode: 'no-cors',
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
         })
@@ -36,6 +38,8 @@ export default class Info extends Component {
                         isLoaded: true,
                         posts: result, 
                         filteredPosts: result,
+                        filteredGender: result,
+                        filteredCity: result,
                         age: 40
                     });
                 },
@@ -69,11 +73,22 @@ export default class Info extends Component {
             gender.toLowerCase()) !== -1
         })
 
-    this.setState({ filteredGender }, () => console.log(this.state.filteredGender));
+    this.setState({ filteredGender}, () => console.log(this.state.filteredGender));
   };
 
+  filterCity = city => {
+    let filteredCity = this.state.posts
+    filteredCity = filteredCity.filter((post) => {
+      let postCity = post.city.toLowerCase()
+      return postCity.indexOf(
+        city.toLowerCase()) !== -1
+    })
+
+this.setState({ filteredCity}, () => console.log(this.state.filteredCity));
+};
+
     render() {
-        const { error, isLoaded } = this.state;
+        const { error, isLoaded, checked } = this.state;
 
         if (error) {
             return <p className="text-center" Style="margin-top: 50px"> Error {error.message} </p>
@@ -81,9 +96,9 @@ export default class Info extends Component {
             return <p>Loading...</p>
         } else {
             return (
-                <Container>
+                <Container className="themed-container" fluid={true} style={{backgroundColor: 'yellow'}}> 
                     <Row>
-                        <Col md="2" className="text-center mt-4">
+                        <Col md="3" className="text-center mt-4">
                             <h5 className="text-center mt-5">Filters</h5>
                             <Card>
                                 <ListGroup variant="flush" >
@@ -105,21 +120,28 @@ export default class Info extends Component {
                                     </ListGroup.Item>
                                     <ListGroup.Item>
                                         <Nav.Link eventKey="Gender">
-                                            <label>Gender</label>
+                                            <h5>Выбрать пол автора:</h5>
                                             <Form>
-                                                <Form.Check inline label="M" type="radio" id="inline-radio-1" checked = { this.allChecked } onClick={() => this.filterGender("Male")} />
-                                                <Form.Check inline label="F" type="radio" id="inline-radio-1" checked = { this.allChecked } onClick={() => this.filterGender("Female")} />
+                                                <Form.Check inline label="Мужчина => Женщину" type="radio" id="inline-radio-1" checked ={checked} onClick={() => this.filterGender("Man")} />
+                                                <Form.Check inline label="Женщина => Мужчину" type="radio" id="inline-radio-1" checked = { this.allChecked } onClick={() => this.filterGender("Female")} />
+                                            </Form>
+                                        </Nav.Link>
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <Nav.Link eventKey="City">
+                                            <h5>Город:</h5>
+                                            <Form>
+                                                <Form.Check inline label="Киев" type="radio" id="inline-radio-1" checked ={checked} onClick={() => this.filterCity("Odessa")} />
+                                                <Form.Check inline label="Одесса" type="radio" id="inline-radio-1" checked = { this.allChecked } onClick={() => this.filterCity("Lviv")} />
                                             </Form>
                                         </Nav.Link>
                                     </ListGroup.Item>
                                 </ListGroup>
                             </Card>
                         </Col>
-                        <Col md="10">
-                            <Posts posts={this.state.filteredPosts} 
-                                   match={this.props.match} 
-                                   onChange={this.filterPosts}  
-                                   onClick={this.filterGender} 
+                        <Col md="9">
+                            <Posts posts={this.state.filteredPosts, this.state.filteredGender, this.state.filteredCity} 
+                                   onChange={this.filterPosts}   
                                    />
                         </Col>
                     </Row>

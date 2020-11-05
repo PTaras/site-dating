@@ -12,12 +12,12 @@ class FilterGenderPosts extends Component {
     }
   }
 
-  handleChange = (event) => {
-    this.setState({
-      postFilter: event.target.value
-    })
-    this.props.onChange(event.target.value)
-  }
+  // handleChange = (event) => {
+  //   this.setState({
+  //     filteredGender: event.target.value
+  //   })
+  //   this.props.onClick(event.target.value)
+  // }
 
   render() {
     return (
@@ -25,8 +25,8 @@ class FilterGenderPosts extends Component {
            <Nav.Link eventKey="Gender">
            <label>Gender</label>
            <Form>
-               <Form.Check inline label="M" type="radio" id="inline-radio-1" checked = { this.allChecked }  />
-                <Form.Check inline label="F" type="radio" id="inline-radio-1" checked = { this.allChecked }  />
+              <Form.Check inline label="M" type="radio" id="inline-radio-1"   />
+               <Form.Check inline label="F" type="radio" id="inline-radio-1"   />
              </Form>                                                            
           </Nav.Link>
       </ListGroup.Item>

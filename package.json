@@ -13,6 +13,7 @@
     "react-dynamic-filterbar": "^0.2.3",
     "react-filter-search": "^1.0.11",
     "react-nouislider": "^2.0.1",
+    "react-paginate": "^6.5.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
