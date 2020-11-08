@@ -19,7 +19,7 @@ class FilterPosts extends Component {
 
   render() {
     return (
-      <div className="d-flex flex-row-reverse" Style="margin-top: 50px"><Form>
+      <div className="d-flex flex-row-reverse" style={{marginTop: "50px"}}><Form>
       <FormControl
           type="text"
           id="filter"

@@ -15,7 +15,7 @@ for (let number = 1; number <= 5; number++) {
   );
 };
 
-const Posts = ({ posts, onChange}) =>  {
+const Posts = ({ posts,  onChange}) =>  {
   return (
     <Container>
       <Row className="text-center mt-2">
@@ -24,13 +24,13 @@ const Posts = ({ posts, onChange}) =>  {
         </Col>
       </Row>
       <Row>
-      {posts.map((post) => {
+      {(posts).map((post) => {
         return (
-            <Card.Body style={{backgroundColor: 'blue'}}>
-                <Card key={post.id} className="text-center">
+            <Card.Body key={post.id} style={{backgroundColor: 'none'}}>
+                <Card className="text-center">
                     <Card.Header> 
-                      <b Style="float:left">{post.title} ({post.city}) </b>
-                      <b Style="float:right">Возраст: {post.age}</b>  
+                      <b style={{float: "left"}}>{post.title} ({post.city}) </b>
+                      <b style={{float: "right"}}>Возраст: {post.age}</b>  
                     </Card.Header>
                     <Card.Body>
                         <Card.Text>
