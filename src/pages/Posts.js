@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
+
 
 import { Card, Pagination, Container, Row, Col, Form, ListGroup, Nav} from 'react-bootstrap';
 
 import FilterPosts from '../components/FilterResults';
+
 // import FilterGenderPosts from '../components/FilterGenderPosts';
 
 let active = 1;
@@ -20,13 +22,15 @@ const Posts = ({ posts,  onChange}) =>  {
     <Container>
       <Row className="text-center mt-2">
         <Col>
-          <FilterPosts onChange={onChange} />
+        
+          {/* <FilterPosts onChange={onChange} /> */}
+          <FilterPosts/>
         </Col>
       </Row>
       <Row>
       {(posts).map((post) => {
         return (
-            <Card.Body key={post.id} style={{backgroundColor: 'none'}}>
+            <Card.Body key={post.id} style={{backgroundColor: 'none', width: '100%'}}>
                 <Card className="text-center">
                     <Card.Header> 
                       <b style={{float: "left"}}>{post.title} ({post.city}) </b>
@@ -37,7 +41,7 @@ const Posts = ({ posts,  onChange}) =>  {
                           {post.desc}
                         </Card.Text>
                     </Card.Body>
-                  <Card.Footer className="text-muted"><i>Дата публикации: </i>{post.date_created}</Card.Footer>
+                  <Card.Footer className="text-muted"><i>Дата публикации: </i>{post.pubdate}</Card.Footer>
                 </Card>
             </Card.Body>
           )

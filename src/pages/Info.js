@@ -12,8 +12,6 @@ import '../../node_modules/nouislider/distribute/nouislider.min.css';
 import '../../node_modules/nouislider/src/nouislider.tooltips.less';
 import '../../node_modules/nouislider/src/nouislider.pips.less';
 
-const OPTIONS = ["Kyiv", "Lviv", "Odessa"];
-
 export default class Info extends Component {
     constructor(props) {
         super(props);
@@ -21,24 +19,19 @@ export default class Info extends Component {
             error: null,
             isLoaded: false,
             posts: [],
+            postFilter: "",
             filteredPosts: [],
             filteredGender: [],
             filteredCity: [],
-            cities: OPTIONS.reduce(
-                (options, option) => ({
-                  ...options,
-                  [option]: false
-                }),
-                {}
-              ),
             age: 18
         };
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:5000/urls', {
+        fetch('http://127.0.0.1:8000/post/', {
             method: 'GET',
             headers: {
+                'Accept': "*/*",
                 'Content-Type': 'application/json',
             },
         })
@@ -47,19 +40,12 @@ export default class Info extends Component {
                 (result) => {
                     this.setState({
                         isLoaded: true,
-                        posts: result, 
-                        filteredPosts: result,
-                        filteredGender: result,
-                        filteredCity: result,
-                        cities: OPTIONS.reduce(
-                            (options, option) => ({
-                              ...options,
-                              [option]: false
-                            }),
-                            {}
-                          ),
+                        posts: result.posts, 
+                        filteredPosts: result.posts,
+                        filteredGender: result.posts,
+                        filteredCity: result.posts,
                         age: 18
-                    });
+                    }, );
                 },
 
                 (error) => {
@@ -71,28 +57,25 @@ export default class Info extends Component {
             )
     };
 
-    handleClick = () => {
-        this.setState(prevState => ({ age: prevState + 10 }));
-      };
+ 
 
     filterPosts = (postFilter) => {
-        let filteredPosts = this.state.posts
+        let filteredPosts = this.state.posts;
         filteredPosts = filteredPosts.filter((post) => {
-          let postName = post.title.toLowerCase()
-          return postName.indexOf(
+          let postFilters = post.title.toLowerCase()
+          return postFilters.indexOf(
             postFilter.toLowerCase()) !== -1
-        })
-        this.setState({
-          filteredPosts
-        })
-    };
+        });
+
+    this.setState({ filteredPosts }, () => console.log(this.state.filteredPosts));
+  };
 
     filterGender = (gender) => {
         let filteredGender = this.state.posts
         filteredGender = filteredGender.filter((post) => {
-          let postGender = post.gender.toLowerCase()
+          let postGender = post.gender
           return postGender.indexOf(
-            gender.toLowerCase()) !== -1
+            gender) !== -1
         });
 
     this.setState({ filteredGender}, () => console.log(this.state.filteredGender));
@@ -110,59 +93,21 @@ export default class Info extends Component {
         this.setState({ filteredCity}, () => console.log(this.state.filteredCity));
     };
 
-    selectAllCheckboxes = isSelected => {
-        Object.keys(this.state.cities).forEach(checkbox => {
-        this.setState(prevState => ({
-            cities: {
-            ...prevState.cities,
-            [checkbox]: isSelected
-            }
-        }));
-        });
-    };
 
-  selectAll = () => this.selectAllCheckboxes(true);
-
-  deselectAll = () => this.selectAllCheckboxes(false);
-
-  handleCheckboxChange = changeEvent => {
-    const { name } = changeEvent.target;
-
-    this.setState(prevState => ({
-        cities: {
-        ...prevState.cities,
-        [name]: !prevState.cities[name]
-      }
-    }));
-  };
-
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault();
-
-    Object.keys(this.state.cities)
-      .filter(checkbox => this.state.cities[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
-      });
-  };
-
-  createCheckbox = option => (
-    <Checkbox
-      label={option}
-      isSelected={this.state.cities[option]}
-      onCheckboxChange={this.handleCheckboxChange}
-      key={option}
-      onClick={(option) => this.filterCity(this.state.cities[option]), () => console.log(this.state.cities[option])}
-    />
-  );
-
-  createCheckboxes = () => OPTIONS.map(this.createCheckbox);
-
+ 
     render() {
         const { error, isLoaded, check, age } = this.state;
 
         if (error) {
-            return <p className="text-center" style={{marginTop: "50px"}}> Error {error.message} </p>
+            return ( 
+                <Card border="primary" className="text-center"  style={{ width: '18rem', display: 'flex', margin: '100px auto' }}>
+                    <Card.Header>Error</Card.Header>
+                    <Card.Body>
+                    <Card.Text>
+                        {error.message}
+                    </Card.Text>
+                    </Card.Body>
+                </Card>)
         } else if (!isLoaded) {
             return <p>Loading...</p>
         } else {
@@ -210,20 +155,21 @@ export default class Info extends Component {
                                         <Nav.Link eventKey="Gender">
                                             <h5>Выбрать пол автора:</h5>
                                             <Form>
-                                                <Form.Check inline label="Мужчина => Женщину" type="radio" id="inline-radio-1" defaultChecked= {true}  onChange={this.handleCheckboxChange} onClick={() => this.filterGender("Man")} />
-                                                <Form.Check inline label="Женщина => Мужчину" type="radio" id="inline-radio-1" onChange={this.handleCheckboxChange}  onClick={() => this.filterGender("Female")} />
+                                                <Form.Check inline label="Мужчина => Женщину" type="radio" id="inline-radio-1" defaultChecked= {true}  onClick={() => this.filterGender("Мужчина ищет женщину")} />
+                                                <Form.Check inline label="Женщина => Мужчину" type="radio" id="inline-radio-1"   onClick={() => this.filterGender("Женщина ищет женщину")} />
                                             </Form>
                                         </Nav.Link>
                                     </ListGroup.Item>
                                     <ListGroup.Item>
                                         <Nav.Link eventKey="City">
                                             <h5>Город:</h5>
-                                            {/* <Form onChange={this.handleCheckboxChange}>
+                                            <Form >
                                                 <Form.Check inline label="Все города" type="checkbox" defaultChecked ={true}   onClick={() => this.filterCity("")} />
-                                                <Form.Check inline label="Одесса" type="checkbox"  checked={check} onClick={() => this.filterCity("Odessa")} />
-                                                <Form.Check inline label="Львов" type="checkbox"  checked={check} onClick={() => this.filterCity("Lviv")} />
-                                            </Form> */}
-                                            <form onSubmit={this.handleFormSubmit}>
+                                                <Form.Check inline label="Киев" type="checkbox"  checked={check} onClick={() => this.filterCity("Киев")} />
+                                                <Form.Check inline label="Харьков" type="checkbox"  checked={check} onClick={() => this.filterCity("Харьков")} />
+                                                <Form.Check inline label="Львов" type="checkbox"  checked={check} onClick={() => this.filterCity("Львов")} />
+                                            </Form>
+                                            {/* <form onSubmit={this.handleFormSubmit}>
                                                 <select style={{width:"100%"}}>{this.createCheckboxes()}</select>
                                                 <div className="form-group mt-2" >
                                                     <button
@@ -243,7 +189,7 @@ export default class Info extends Component {
                                                     >
                                                     Deselect
                                                     </button>
-                                                </div>  </form>
+                                                </div>  </form> */}
                                         </Nav.Link>
                                     </ListGroup.Item>
                                 </ListGroup>
@@ -252,7 +198,7 @@ export default class Info extends Component {
                         <Col md="9">
                             <Posts 
                                     // posts1={this.state.filteredPosts} 
-                                //    posts2={this.state.filteredGender}
+                                   posts={this.state.filteredGender}
                                    posts={this.state.filteredCity} 
                                    onChange={this.filterPosts}/>
                         </Col>

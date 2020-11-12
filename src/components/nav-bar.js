@@ -23,8 +23,8 @@ const Header = () => {
                         <Nav className="mr-auto">
                             <Nav.Link href="/">Home</Nav.Link>
                             <Nav.Link href="/about">About me</Nav.Link>
-                            <Nav.Link href="/contacs">Contacts</Nav.Link>
-                            <Nav.Link href="/info">Info</Nav.Link>
+                            <Nav.Link style={{float: "right"}} href="/add_post">Добавить пост</Nav.Link>
+                            <Nav.Link href="/posts">Posts</Nav.Link>
                         </Nav>
                         {/* <Form inline>
                         <FormControl
@@ -46,8 +46,8 @@ const Header = () => {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/about" component={About} />
-                    <Route exact path="/contacs" component={Contacs} />
-                    <Route exact path="/info" component={Info} />
+                    <Route exact path="/add_post" component={Contacs} />
+                    <Route exact path="/posts" component={Info} />
                 </Switch>
             </Router>
         </>

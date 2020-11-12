@@ -7,13 +7,13 @@ export default class About extends Component {
             <>
                 <Container style={{ background: '#d3d3d3' }}>
                     <Tab.Container id="left-tab-exampe" defaultActiveKey="first" >
-                        <h1 className="text-center m-2">My works</h1>
+                        <h1 className="text-center m-2">title</h1>
                         <Row>
                             <Col sm={3}>
                                 <Nav variant="pills" className="flex-column mt-2">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="Facebook">Facebook</Nav.Link>
-                                        <Nav.Link eventKey="second">Task Manager</Nav.Link>
+                                        <Nav.Link eventKey="Facebook">1</Nav.Link>
+                                        <Nav.Link eventKey="second">2</Nav.Link>
                                         <Nav.Link eventKey="third">third</Nav.Link>
                                         <Nav.Link eventKey="fourth">fourth</Nav.Link>
                                         <Nav.Link eventKey="fifth">fifth</Nav.Link>
@@ -26,7 +26,7 @@ export default class About extends Component {
                                         <p>My first react-app Facebook</p>
                                         <img src="" />
                                         <a
-                                            href="https://github.com/PTaras/react-my-project-facebook"
+                                            href="#"
                                             target="_blank"
                                         >To see, follow the link</a>
                                     </Tab.Pane>
@@ -34,7 +34,7 @@ export default class About extends Component {
                                         <p>Task Manager React</p>
                                         <img src="" />
                                         <a
-                                            href="https://github.com/PTaras/react-my-project-facebook"
+                                            href="#"
                                             target="_blank"
                                         >To see, follow the link</a>
                                     </Tab.Pane>
