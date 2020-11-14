@@ -8,18 +8,17 @@ export default class Create extends Component {
         let request_body = {
             "title": data.title,
             "age": data.age,
-            "city": data.city,
             "desired_age": {
               "from_": data.from,
               "to": data.to
             },
             "email": data.email,
-            "who_is_looking_for_whom": data.looking,
+            "city": data.city,
             "desc": data.desc,
+            "who_is_looking_for_whom": data.looking,
             "is_verified": "need review"
-          }
+          }; 
         createPost(request_body);
-        console.log('form submission data', data);
     }
 
     render() {

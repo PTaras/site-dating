@@ -21,59 +21,61 @@ export default class Form extends Component {
         this.handleLookingChange = this.handleLookingChange.bind(this);
         this.handleFromChange = this.handleFromChange.bind(this);
         this.handleToChange = this.handleToChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
-    handleDescChange(e) {
+    handleDescChange = (e) => {
         this.setState({
             desc: e.target.value
         });
     }
-    handleTitleChange(e) {
+    handleTitleChange = (e) => {
         this.setState({
             title: e.target.value
         });
     }
-    handleCityChange(e) {
+    handleCityChange = (e) => {
         this.setState({
             city: e.target.value
         });
     }
 
-    handleEmailChange(e) {
+    handleEmailChange = (e) => {
         this.setState({
             email: e.target.value
         });
     }
 
-    handleAgeChange(e) {
+    handleAgeChange = (e) => {
         this.setState({
             age: e.target.value
         });
     }
 
-    handleLookingChange(e) {
+    handleLookingChange = (e) => {
         this.setState({
             looking: e.target.value
         });
     }
 
-    handleFromChange(e) {
+    handleFromChange = (e) => {
         this.setState({
             from: e.target.value
         });
     }
 
-    handleToChange(e) {
+    handleToChange = (e) => {
         this.setState({
             to: e.target.value
         });
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
+    handleSubmit = (e) => {
+        // e.preventDefault();
         this.props.onSubmit(this.state);
+        
+        alert("Post sibmit!!!");
     }
 
     render() {

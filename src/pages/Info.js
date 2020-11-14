@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // import 'rc-slider/assets/index.css'
 
 import Nouislider from 'react-nouislider';
-import { Container, Row, Col, ListGroup, Card, Nav, Form} from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Card, Nav, Form, DropdownButton, Dropdown} from 'react-bootstrap';
 
 import Posts from './Posts';
 import Checkbox from "./Checkbox";
@@ -23,13 +23,28 @@ export default class Info extends Component {
             filteredPosts: [],
             filteredGender: [],
             filteredCity: [],
-            age: 18
+            age: 18,
+            allCities: [], 
+            city: "" 
         };
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/post/', {
-            method: 'GET',
+        const data = {
+            "filter_": {
+              "city": "ALL",
+              "who_is_looking_for_whom": "ALL",
+              "desired_age_from": 0,
+              "desired_age_to": 0
+            },
+            "page": {
+              "page": 1
+            }
+          };
+        fetch('http://10.21.3.156:8000/posts/', {
+            method: 'POST',
+            body: JSON.stringify(data),
             headers: {
                 'Accept': "*/*",
                 'Content-Type': 'application/json',
@@ -44,7 +59,8 @@ export default class Info extends Component {
                         filteredPosts: result.posts,
                         filteredGender: result.posts,
                         filteredCity: result.posts,
-                        age: 18
+                        allCities: result.aviable_items.cities,
+                        selectedOption: null
                     }, );
                 },
 
@@ -59,16 +75,16 @@ export default class Info extends Component {
 
  
 
-    filterPosts = (postFilter) => {
-        let filteredPosts = this.state.posts;
-        filteredPosts = filteredPosts.filter((post) => {
-          let postFilters = post.title.toLowerCase()
-          return postFilters.indexOf(
-            postFilter.toLowerCase()) !== -1
-        });
+//     filterPosts = (postFilter) => {
+//         let filteredPosts = this.state.posts;
+//         filteredPosts = filteredPosts.filter((post) => {
+//           let postFilters = post.title.toLowerCase()
+//           return postFilters.indexOf(
+//             postFilter.toLowerCase()) !== -1
+//         });
 
-    this.setState({ filteredPosts }, () => console.log(this.state.filteredPosts));
-  };
+//     this.setState({ filteredPosts }, () => console.log(this.state.filteredPosts));
+//   };
 
     filterGender = (gender) => {
         let filteredGender = this.state.posts
@@ -82,21 +98,73 @@ export default class Info extends Component {
   };
 
 
-    filterCity = (city) => {
-        let filteredCity = this.state.posts;
-        filteredCity = filteredCity.filter((post) => {
-        let postCity = post.city.toLowerCase()
-        return postCity.indexOf(
-            city.toLowerCase()) !== -1
-        })
+    // filterCity = (city) => {
+    //     let filteredCity = this.state.posts;
+    //     filteredCity = filteredCity.filter((post) => {
+    //     let postCity = post.city.toLowerCase()
+    //     return postCity.indexOf(
+    //         city.toLowerCase()) !== -1
+    //     })
 
-        this.setState({ filteredCity}, () => console.log(this.state.filteredCity));
-    };
+    //     this.setState({ filteredCity }, () => console.log("1", this.state.filteredCity));
+       
+    // };
+
+
+    // filterCountry(e){
+    //     this.setState({ city: e.target.value})
+    //     console.log("city", this.state.city);
+    //   }
+
+   handleChange(e) {
+        e.preventDefault();
+        // console.log("city", this.state.city);
+        const data = {
+            "filter_": {
+              "city": e.target.value,
+              "who_is_looking_for_whom": "ALL",
+              "desired_age_from": 0,
+              "desired_age_to": 0
+            },
+            "page": {
+              "page": 1
+            }
+          };
+        fetch('http://10.21.3.156:8000/posts/', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': "*/*",
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        posts: result.posts, 
+                        filteredPosts: result.posts,
+                        filteredGender: result.posts,
+                        filteredCity: result.posts,
+                        allCities: result.aviable_items.cities,
+                        city: e.target.value
+                    }, );
+                },
+
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+      };
 
 
  
     render() {
-        const { error, isLoaded, check, age } = this.state;
+        const { error, isLoaded, age, allCities, filteredCity  } = this.state;
 
         if (error) {
             return ( 
@@ -163,33 +231,26 @@ export default class Info extends Component {
                                     <ListGroup.Item>
                                         <Nav.Link eventKey="City">
                                             <h5>Город:</h5>
-                                            <Form >
+                                            {/* <Form >
                                                 <Form.Check inline label="Все города" type="checkbox" defaultChecked ={true}   onClick={() => this.filterCity("")} />
                                                 <Form.Check inline label="Киев" type="checkbox"  checked={check} onClick={() => this.filterCity("Киев")} />
                                                 <Form.Check inline label="Харьков" type="checkbox"  checked={check} onClick={() => this.filterCity("Харьков")} />
                                                 <Form.Check inline label="Львов" type="checkbox"  checked={check} onClick={() => this.filterCity("Львов")} />
-                                            </Form>
-                                            {/* <form onSubmit={this.handleFormSubmit}>
-                                                <select style={{width:"100%"}}>{this.createCheckboxes()}</select>
-                                                <div className="form-group mt-2" >
-                                                    <button
-                                                    type="button"
-                                                    className="btn btn-outline-primary mr-2"
-                                                    style={{width:"46%"}}
-                                                    onClick={this.selectAll} 
-                                                    onClick={() => this.filterCity("")}
+                                            </Form> */}
+                                           <DropdownButton id="dropdown-item-button" title={this.state.city} 
+                                             >
+                                           {(allCities).map((town) => {
+                                                return (
+                                                    <Dropdown.Item as="button" key={town} 
+                                                        onClick={this.handleChange}
+                                                        options={town}
+                                                        value={town}
+                                                        // onClick={() => this.filterCity(town)}
                                                     >
-                                                    All Cities
-                                                    </button>
-                                                    <button
-                                                    type="button"
-                                                    className="btn btn-outline-primary mr-2"
-                                                    style={{width:"46%"}}
-                                                    onClick={this.deselectAll}
-                                                    >
-                                                    Deselect
-                                                    </button>
-                                                </div>  </form> */}
+                                                    {town}</Dropdown.Item>
+                                                )
+                                            })}
+                                            </DropdownButton>
                                         </Nav.Link>
                                     </ListGroup.Item>
                                 </ListGroup>
@@ -198,9 +259,9 @@ export default class Info extends Component {
                         <Col md="9">
                             <Posts 
                                     // posts1={this.state.filteredPosts} 
-                                   posts={this.state.filteredGender}
+                                //    posts={this.state.filteredGender}
                                    posts={this.state.filteredCity} 
-                                   onChange={this.filterPosts}/>
+                                   onChange={this.filterCity}/>
                         </Col>
                     </Row>
                 </Container>
