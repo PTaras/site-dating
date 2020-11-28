@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, ListGroup, Card, Nav, DropdownButton, Dropdown} from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Card, Nav, DropdownButton, Dropdown, Pagination} from 'react-bootstrap';
 
 import Posts from './Posts';
+import FilterPosts from '../components/FilterResults';
 
 import '../../node_modules/nouislider/distribute/nouislider.min.css';
 import '../../node_modules/nouislider/src/nouislider.tooltips.less';
@@ -19,16 +20,19 @@ export default class Info extends Component {
             filteredGender: [],
             filteredCity: [],
             allCities: [], 
-            who_is_looking: [], 
+            // who_is_looking: [], 
             city: "Все города",
             looking: "Показать все",
             age_from: '' || 16,
-            age_to: '' || 60
+            age_to: '' || 60, 
+            countPagig: '',
+            currentPage: ''
         };
         this.handleChangeCity = this.handleChangeCity.bind(this);
         this.handleChangeLooking = this.handleChangeLooking.bind(this);
         this.handleChangeAgeFrom = this.handleChangeAgeFrom.bind(this);
         this.handleChangeAgeTo = this.handleChangeAgeTo.bind(this);
+        this.handleClickPaging = this.handleClickPaging.bind(this);
     }
 
     componentDidMount() {
@@ -63,7 +67,9 @@ export default class Info extends Component {
                         allCities: result.aviable_items.cities,
                         who_is_looking: result.aviable_items.whoes_is_looking_whoms, 
                         age_from: result.filter.desired_age_from,
-                        age_to: result.filter.desired_age_to
+                        age_to: result.filter.desired_age_to,
+                        countPagig: result.aviable_pagination_range,
+                        currentPage: result.current_page
                     }, );
                 },
 
@@ -123,12 +129,16 @@ export default class Info extends Component {
 
       handleChangeLooking(e) {
         e.preventDefault();
+        // console.log("look",this.state.looking);
+        // console.log("this.state.age_from",this.state.age_from);
+        // console.log("this.state.age_to",this.state.age_to);
+        // console.log("this.state.city",this.state.city);
         const data = {
             "filter_": {
               "city": this.state.city,
               "who_is_looking_for_whom":  e.target.value,
-              "desired_age_from": 0,
-              "desired_age_to": 0
+              "desired_age_from": this.state.age_from,
+              "desired_age_to": this.state.age_to 
             },
             "page": {
               "page": 1
@@ -196,7 +206,7 @@ export default class Info extends Component {
                             filteredPosts: result.posts,
                             filteredGender: result.posts,
                             filteredCity: result.posts,
-                            // who_is_looking: result.aviable_items.whoes_is_looking_whoms,
+                            who_is_looking: result.aviable_items.whoes_is_looking_whoms,
                             age_from: e.target.value,
                             age_to: result.filter.desired_age_to
                         }, );
@@ -246,7 +256,7 @@ export default class Info extends Component {
                             filteredPosts: result.posts,
                             filteredGender: result.posts,
                             filteredCity: result.posts,
-                            // who_is_looking: result.aviable_items.whoes_is_looking_whoms,
+                            who_is_looking: result.aviable_items.whoes_is_looking_whoms,
                             age_from: result.filter.desired_age_from,
                             // age_to: result.filter.desired_age_to
                             age_to: e.target.value
@@ -264,9 +274,58 @@ export default class Info extends Component {
         
       };
 
+      handleClickPaging(e) {
+        // e.preventDefault();
+        console.log("page", e.target.text);
+        
+            const data = {
+                "filter_": {
+                  "city": this.state.city,
+                  "who_is_looking_for_whom": this.state.looking,
+                  "desired_age_from": this.state.age_from || 16,
+                  "desired_age_to": this.state.age_to || 60
+                },
+                "page": {
+                  "page": e.target.text
+                }
+              };
+            fetch('http://127.0.0.1:8000/posts/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': "*/*",
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        this.setState({
+                            isLoaded: true,
+                            posts: result.posts, 
+                            filteredPosts: result.posts,
+                            filteredGender: result.posts,
+                            filteredCity: result.posts,
+                            who_is_looking: result.aviable_items.whoes_is_looking_whoms,
+                            age_from: result.filter.desired_age_from,
+                            age_to: result.filter.desired_age_to,
+                            currentPage: e.target.value,
+                        }, );
+                    },
+    
+                    (error) => {
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
+        
+        
+      };
  
     render() {
-        const { error, isLoaded, allCities, who_is_looking, age_from, age_to  } = this.state;
+        const { error, isLoaded, allCities, who_is_looking  } = this.state;
 
         if (error) {
             return ( 
@@ -372,10 +431,26 @@ export default class Info extends Component {
                         </Col>
                         <Col md="9">
                             <Posts 
-                                    // posts1={this.state.filteredPosts} 
-                                //    posts={this.state.filteredGender}
+                                    // onClick = {this.handleClickPaging}
+                                    // currentP = {this.state.currentPage}
+                                    // pags = {this.state.countPagig}
                                    posts={this.state.filteredCity} 
                                    onChange={this.filterCity}/>
+                                   <Row>
+                            <Col md={12}>
+                            <Pagination className="pagination justify-content-center">
+                                <Pagination.First />
+                                <Pagination.Prev />
+                                {(Array.from({length:this.state.countPagig}, (_, i) => ++i)).map((item) => {
+                                    return (
+                                    <Pagination.Item key={item} active={item === this.state.currentPage} onClick={this.handleClickPaging}> {item}</Pagination.Item >)
+                                })}
+                                {/* <Pagination.Ellipsis /> */}
+                                <Pagination.Next />
+                                <Pagination.Last />
+                            </Pagination>
+                            </Col>
+                        </Row>
                         </Col>
                     </Row>
                 </Container>

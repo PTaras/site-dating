@@ -1,29 +1,17 @@
 import React from 'react';
 
 
-import { Card, Pagination, Container, Row, Col, Form, ListGroup, Nav} from 'react-bootstrap';
+import { Card, Pagination, Container, Row, Col} from 'react-bootstrap';
 
 import FilterPosts from '../components/FilterResults';
 
-// import FilterGenderPosts from '../components/FilterGenderPosts';
 
-let active = 1;
-let items = [];
-for (let number = 1; number <= 5; number++) {
-  items.push(
-    <Pagination.Item key={number} active={number === active}>
-      {number}
-    </Pagination.Item>
-  );
-};
 
-const Posts = ({ posts,  onChange}) =>  {
+const Posts = ({ posts}) =>  {
   return (
     <Container>
       <Row className="text-center mt-2">
         <Col>
-        
-          {/* <FilterPosts onChange={onChange} /> */}
           <FilterPosts/>
         </Col>
       </Row>
@@ -47,18 +35,21 @@ const Posts = ({ posts,  onChange}) =>  {
           )
       })}
       </Row>
-      <Row>
+      {/* <Row>
         <Col md={12}>
         <Pagination className="pagination justify-content-center">
               <Pagination.First />
               <Pagination.Prev />
-              <Pagination>{items}</Pagination>
-              <Pagination.Ellipsis />
+              {(Array.from({length:pags}, (_, i) => ++i)).map((item) => {
+                return (
+                  <Pagination.Item key={item} active={item === currentP} onClick={onClick}> {item}</Pagination.Item >)
+              })}
+              {console.log(currentP)}
               <Pagination.Next />
               <Pagination.Last />
           </Pagination>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   )
 }
