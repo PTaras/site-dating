@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-// import Slider, { Range } from 'rc-slider';
-// import 'rc-slider/assets/index.css'
-
-import Nouislider from 'react-nouislider';
 import { Container, Row, Col, ListGroup, Card, Nav, DropdownButton, Dropdown} from 'react-bootstrap';
 
 import Posts from './Posts';
@@ -24,23 +20,24 @@ export default class Info extends Component {
             filteredCity: [],
             allCities: [], 
             who_is_looking: [], 
-            city: "ALL",
-            looking: "ALL",
-            age_from: 0,
-            age_to: 0
+            city: "Все города",
+            looking: "Показать все",
+            age_from: '' || 16,
+            age_to: '' || 60
         };
         this.handleChangeCity = this.handleChangeCity.bind(this);
         this.handleChangeLooking = this.handleChangeLooking.bind(this);
-        this.handleChangeAge = this.handleChangeAge.bind(this);
+        this.handleChangeAgeFrom = this.handleChangeAgeFrom.bind(this);
+        this.handleChangeAgeTo = this.handleChangeAgeTo.bind(this);
     }
 
     componentDidMount() {
         const data = {
             "filter_": {
-              "city": "ALL",
-              "who_is_looking_for_whom": "ALL",
-              "desired_age_from": 0,
-              "desired_age_to": 0
+              "city": "Все города",
+              "who_is_looking_for_whom": "Показать все",
+              "desired_age_from": 16,
+              "desired_age_to": 60
             },
             "page": {
               "page": 1
@@ -81,13 +78,13 @@ export default class Info extends Component {
 
     handleChangeCity(e) {
         e.preventDefault();
-        console.log("city", this.state.city);
+        // console.log("city", this.state.city);
         const data = {
             "filter_": {
               "city": e.target.value,
               "who_is_looking_for_whom": this.state.looking,
-              "desired_age_from": 0,
-              "desired_age_to": 0
+              "desired_age_from": 16,
+              "desired_age_to": 60
             },
             "page": {
               "page": 1
@@ -126,7 +123,6 @@ export default class Info extends Component {
 
       handleChangeLooking(e) {
         e.preventDefault();
-        console.log("look",this.state.looking);
         const data = {
             "filter_": {
               "city": this.state.city,
@@ -169,54 +165,108 @@ export default class Info extends Component {
             )
       };
 
-      handleChangeAge(e) {
+      handleChangeAgeFrom(e) {
         e.preventDefault();
-        console.log("look",this.state.age_from);
-        const data = {
-            "filter_": {
-              "city": this.state.city,
-              "who_is_looking_for_whom": this.state.looking,
-              "desired_age_from": 0,
-              "desired_age_to": 0
-            },
-            "page": {
-              "page": 1
-            }
-          };
-        fetch('http://127.0.0.1:8000/posts/', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': "*/*",
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        posts: result.posts, 
-                        filteredPosts: result.posts,
-                        filteredGender: result.posts,
-                        filteredCity: result.posts,
-                        who_is_looking: result.aviable_items.whoes_is_looking_whoms,
-                        looking: e.target.value
-                    }, );
+        if (e.target.value >= 16 || e.target.value <= 60) {
+            const data = {
+                "filter_": {
+                  "city": this.state.city,
+                  "who_is_looking_for_whom": this.state.looking,
+                  "desired_age_from": e.target.value || 16,
+                  "desired_age_to": this.state.age_to || 60
                 },
-
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
+                "page": {
+                  "page": 1
                 }
-            )
+              };
+            fetch('http://127.0.0.1:8000/posts/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': "*/*",
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        this.setState({
+                            isLoaded: true,
+                            posts: result.posts, 
+                            filteredPosts: result.posts,
+                            filteredGender: result.posts,
+                            filteredCity: result.posts,
+                            // who_is_looking: result.aviable_items.whoes_is_looking_whoms,
+                            age_from: e.target.value,
+                            age_to: result.filter.desired_age_to
+                        }, );
+                    },
+    
+                    (error) => {
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
+        }
+       
+      };
+
+      handleChangeAgeTo(e) {
+        e.preventDefault();
+        // console.log("age_to_to", this.state.age_to);
+        // console.log("age_to_from", this.state.age_from);
+        if (e.target.value >= 16 || e.target.value <= 60) {
+            const data = {
+                "filter_": {
+                  "city": this.state.city,
+                  "who_is_looking_for_whom": this.state.looking,
+                  "desired_age_from": this.state.age_from ||16,
+                  "desired_age_to": e.target.value || 60
+                },
+                "page": {
+                  "page": 1
+                }
+              };
+            fetch('http://127.0.0.1:8000/posts/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': "*/*",
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        this.setState({
+                            isLoaded: true,
+                            posts: result.posts, 
+                            filteredPosts: result.posts,
+                            filteredGender: result.posts,
+                            filteredCity: result.posts,
+                            // who_is_looking: result.aviable_items.whoes_is_looking_whoms,
+                            age_from: result.filter.desired_age_from,
+                            // age_to: result.filter.desired_age_to
+                            age_to: e.target.value
+                        }, );
+                    },
+    
+                    (error) => {
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
+        }
+        
       };
 
  
     render() {
-        const { error, isLoaded, age, allCities, who_is_looking  } = this.state;
+        const { error, isLoaded, allCities, who_is_looking, age_from, age_to  } = this.state;
 
         if (error) {
             return ( 
@@ -238,13 +288,28 @@ export default class Info extends Component {
                             <h5 className="text-center mt-5">Filters</h5>
                             <Card>
                             <ListGroup>
+                            <Nav.Link eventKey="Age">
                             <h5 className="text-center mt-4">Возраст:</h5>
-                                    <ListGroup.Item style ={{height: "150px"}} onChange={this.handleChangeAge}>
-                                        <Nav.Link eventKey="Age" className="text-center mt-5">
-                                        <Nouislider 
-                                            start={age}
-                                            range={{min: 15, max: 100}}
-                                            start={[15, 100]}
+                                    <ListGroup.Item style ={{height: "60px"}}>
+                                    <form>
+                                        <label>
+                                        From:
+                                        <input type="number" min="16"
+                                                max="60" onChange={this.handleChangeAgeFrom} />
+                                        </label>
+                                        <label>
+                                        To:
+                                        <input type="number" min="16"
+                                                max="60" onChange={this.handleChangeAgeTo} />
+                                        </label>
+                                        {/* <input type="submit" value="Отправить" /> */}
+                                    </form>
+                                        {/* <Nouislider 
+                                            onChange={this.handleChangeAge}
+                                            // value = {this.state.age_from}
+                                            start={value}
+                                            range={{min: 0, max: 100}}
+                                            start={[this.state.age_from, this.state.age_to]}
                                             step={1}
                                             connect ={true}
                                             tooltips = {true}
@@ -260,17 +325,11 @@ export default class Info extends Component {
                                                 values: [0, 25, 50, 75, 100],
                                                 // density: 5
                                             }}
-                                              /> 
-                                            {/* <Slider 
-                                            />
-                                            {/* <Range range={{min: 18, max: 100}}
-                                            step='1'
-                                            dots='true'
-                                            ariaLabelGroupForHandles={[1,2,3,4,5]}
-                                            tabIndex={[18,100]}
-                                            /> */}
-                                        </Nav.Link>
+                                              />  */}
+                                        
+                                        
                                     </ListGroup.Item>
+                                    </Nav.Link>
                                     <ListGroup.Item>
                                         <Nav.Link eventKey="Gender">
                                         <h5>Выбрать пол автора:</h5>
