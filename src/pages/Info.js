@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Container, Row, Col, ListGroup, Card, Nav, DropdownButton, Dropdown, Pagination} from 'react-bootstrap';
 
 import Posts from './Posts';
-import FilterPosts from '../components/FilterResults';
 
 import '../../node_modules/nouislider/distribute/nouislider.min.css';
 import '../../node_modules/nouislider/src/nouislider.tooltips.less';
@@ -20,12 +19,12 @@ export default class Info extends Component {
             filteredGender: [],
             filteredCity: [],
             allCities: [], 
-            // who_is_looking: [], 
+            who_is_looking: [], 
             city: "Все города",
             looking: "Показать все",
             age_from: '' || 16,
             age_to: '' || 60, 
-            countPagig: '',
+            countPaging: '',
             currentPage: ''
         };
         this.handleChangeCity = this.handleChangeCity.bind(this);
@@ -68,7 +67,7 @@ export default class Info extends Component {
                         who_is_looking: result.aviable_items.whoes_is_looking_whoms, 
                         age_from: result.filter.desired_age_from,
                         age_to: result.filter.desired_age_to,
-                        countPagig: result.aviable_pagination_range,
+                        countPaging: result.aviable_pagination_range,
                         currentPage: result.current_page
                     }, );
                 },
@@ -276,7 +275,7 @@ export default class Info extends Component {
 
       handleClickPaging(e) {
         // e.preventDefault();
-        console.log("page", e.target.text);
+        console.log("page", e.target.text, this.state.currentPage);
         
             const data = {
                 "filter_": {
@@ -309,7 +308,7 @@ export default class Info extends Component {
                             who_is_looking: result.aviable_items.whoes_is_looking_whoms,
                             age_from: result.filter.desired_age_from,
                             age_to: result.filter.desired_age_to,
-                            currentPage: e.target.value,
+                            currentPage: result.current_page,
                         }, );
                     },
     
@@ -325,7 +324,7 @@ export default class Info extends Component {
       };
  
     render() {
-        const { error, isLoaded, allCities, who_is_looking  } = this.state;
+        const { error, isLoaded, allCities, who_is_looking, countPaging, currentPage  } = this.state;
 
         if (error) {
             return ( 
@@ -352,12 +351,12 @@ export default class Info extends Component {
                                     <ListGroup.Item style ={{height: "60px"}}>
                                     <form>
                                         <label>
-                                        From:
+                                        От:
                                         <input type="number" min="16"
                                                 max="60" onChange={this.handleChangeAgeFrom} />
                                         </label>
                                         <label>
-                                        To:
+                                        Дo:
                                         <input type="number" min="16"
                                                 max="60" onChange={this.handleChangeAgeTo} />
                                         </label>
@@ -433,21 +432,24 @@ export default class Info extends Component {
                             <Posts 
                                     // onClick = {this.handleClickPaging}
                                     // currentP = {this.state.currentPage}
-                                    // pags = {this.state.countPagig}
+                                    // pags = {this.state.countPaging}
                                    posts={this.state.filteredCity} 
                                    onChange={this.filterCity}/>
                                    <Row>
                             <Col md={12}>
                             <Pagination className="pagination justify-content-center">
-                                <Pagination.First />
-                                <Pagination.Prev />
-                                {(Array.from({length:this.state.countPagig}, (_, i) => ++i)).map((item) => {
+                                {currentPage === 1 ? <Pagination.First disabled /> : <Pagination.First />}
+                                {currentPage === 1 ? <Pagination.Prev disabled/> : <Pagination.Prev />}
+                                {(Array.from({length:countPaging}, (_, i) => ++i)).map((item) => {
+                                    if (countPaging >= 3)  return (
+                                        <Pagination.Item key={item} active={item === currentPage} onClick={this.handleClickPaging}> {item}</Pagination.Item >
+                                    );
                                     return (
-                                    <Pagination.Item key={item} active={item === this.state.currentPage} onClick={this.handleClickPaging}> {item}</Pagination.Item >)
+                                        <Pagination.Ellipsis /> 
+                                    )
                                 })}
-                                {/* <Pagination.Ellipsis /> */}
-                                <Pagination.Next />
-                                <Pagination.Last />
+                                {currentPage === countPaging ? <Pagination.Next disabled /> : <Pagination.Next />}
+                                {currentPage === countPaging ? <Pagination.Last disabled/> : <Pagination.Last />}
                             </Pagination>
                             </Col>
                         </Row>

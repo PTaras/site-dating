@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { DropdownButton, Dropdown, Card} from 'react-bootstrap';
+
+import style from '../assets/style/style.css';
 
 export default class Form extends Component {
     constructor(props) {
@@ -7,12 +10,15 @@ export default class Form extends Component {
             desc: this.props.desc || '',
             title: this.props.title || '',
             age: this.props.age || '',
-            city: this.props.city || '',
+            city: this.props.city || 'Киев',
             from: this.props.from || '',
             to: this.props.to || '',
             email: this.props.email || '',
-            looking: this.props.looking || ''
+            looking: this.props.looking || 'Мужчина ищет женщину',
+            who_is_looking: '',
+            isLoaded: false
         };
+
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleCityChange = this.handleCityChange.bind(this);
@@ -24,6 +30,52 @@ export default class Form extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount() {
+        const data = {
+            "filter_": {
+              "city": "Все города",
+              "who_is_looking_for_whom": "Показать все",
+              "desired_age_from": 16,
+              "desired_age_to": 60
+            },
+            "page": {
+              "page": 1
+            }
+          };
+        fetch('http://127.0.0.1:8000/posts/', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': "*/*",
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        posts: result.posts, 
+                        filteredPosts: result.posts,
+                        filteredGender: result.posts,
+                        filteredCity: result.posts,
+                        allCities: result.aviable_items.cities,
+                        who_is_looking: result.aviable_items.whoes_is_looking_whoms, 
+                        age_from: result.filter.desired_age_from,
+                        age_to: result.filter.desired_age_to,
+                        countPaging: result.aviable_pagination_range,
+                        currentPage: result.current_page
+                    }, );
+                },
+
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    };
 
     handleDescChange = (e) => {
         this.setState({
@@ -73,111 +125,163 @@ export default class Form extends Component {
 
     handleSubmit = (e) => {
         // e.preventDefault();
-        this.props.onSubmit(this.state);
-        
+        this.props.onSubmit(this.state.who_is_looking);
         alert("Post sibmit!!!");
     }
-
+    
     render() {
-        // const { body, title } = this.state;
+        const { error, isLoaded, who_is_looking, allCities } = this.state;
+        if (error) {
+            return ( 
+                <Card border="primary" className="text-center"  style={{ width: '18rem', display: 'flex', margin: '100px auto' }}>
+                    <Card.Header>Error</Card.Header>
+                    <Card.Body>
+                    <Card.Text>
+                        {error.message}
+                    </Card.Text>
+                    </Card.Body>
+                </Card>)
+        } else if (!isLoaded) {
+            return <p>Loading...</p>
+        } else {
         return (
-            <form name="blog_post" className="form-horizontal" onSubmit={this.handleSubmit}>
-                <div id="blog_post">
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_title">Title</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_title"
-                                   required="required"
-                                   value={this.state.title}
-                                   onChange={this.handleTitleChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">desc</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.desc}
-                                   onChange={this.handleDescChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">city</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.city}
-                                   onChange={this.handleCityChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">email</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.email}
-                                   onChange={this.handleEmailChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">Ищу:</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.looking}
-                                   onChange={this.handleLookingChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">Ваш возраст:</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.age}
-                                   onChange={this.handleAgeChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label required" htmlFor="blog_post_body">From - To</label>
-                        <div className="col-sm-10">
-                            <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.from}
-                                   onChange={this.handleFromChange}
-                                   className="form-control"/>
-                                   <input type="text"
-                                   id="blog_post_body"
-                                   required="required"
-                                   value={this.state.to}
-                                   onChange={this.handleToChange}
-                                   className="form-control"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="col-sm-2"></div>
-                        <div className="col-sm-10">
-                            <button type="submit"
-                                    id="blog_post_submit"
-                                    className="btn-default btn">
-                                Submit
-                            </button>
-                        </div>
+            <form name="blog_post" className="form-horizontal mt-5" onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
+            <div id="blog_post">
+                <div className="form-group">
+                    <label className="col-sm-4 control-label required" htmlFor="blog_post_title">Введите имя</label>
+                    <div className="col-sm-10">
+                        <input type="text"
+                                minLength="3"
+                                maxLength="16"
+                               id="blog_post_title"
+                               required="required"
+                               value={this.state.title}
+                               onChange={this.handleTitleChange}
+                               className="form-control"/>
                     </div>
                 </div>
-            </form>
+                <div className="form-group">
+                    <label className="col-sm-6 control-label required" htmlFor="blog_post_body">Расскажите кратко о себе</label>
+                    <div className="col-sm-10">
+                        <input type="text"
+                                maxLength="300"
+                               id="blog_post_body"
+                               required="required"
+                               value={this.state.desc}
+                               onChange={this.handleDescChange}
+                               className="form-control"/>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label className="col-sm-6 control-label required" htmlFor="blog_post_body">Укажите Ваш возраст</label>
+                    <div className="col-sm-10">
+                        <input 
+                               id="blog_post_body"
+                               type="number"
+                               min="16"
+                               max="60"
+                               required="required"
+                               value={this.state.age}
+                               onChange={this.handleAgeChange}
+                               className="form-control"/>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label className="col-sm-4 control-label required" htmlFor="blog_post_body">Введите email</label>
+                    <div className="col-sm-10">
+                        <input 
+                               id="blog_post_body"
+                               type="email"
+                               maxLength="80"
+                               required="required"
+                               value={this.state.email}
+                               onChange={this.handleEmailChange}
+                               className="form-control"/>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label className="col-sm-6 control-label required" htmlFor="blog_post_body">Выберите Ваш город</label>
+                    <div className="col-sm-10 text-center">
+                    <DropdownButton id="dropdown-item-button" title={this.state.city}
+                                         >
+                                       {(allCities).map((item) => {
+                                            return (
+                                                <Dropdown.Item as="button" key={item} 
+                                                    onClick={this.handleCityChange}
+                                                    options={item}
+                                                    value={item}
+                                                    required="required"
+                                                    id="blog_post_body"
+                                                >
+                                                {item}</Dropdown.Item>
+                                            )
+                                        })}
+                                        </DropdownButton>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label className="col-sm-6 control-label required" htmlFor="blog_post_body">Кого Вы ищете:</label>
+                    <div className="col-sm-10 text-center">
+                    <DropdownButton id="dropdown-item-button" title={this.state.looking}
+                                         >
+                                       {(who_is_looking).map((item) => {
+                                            return (
+                                                <Dropdown.Item as="button" key={item} 
+                                                    onClick={this.handleLookingChange}
+                                                    options={item}
+                                                    value={item}
+                                                    required="required"
+                                                    id="blog_post_body"
+                                                >
+                                                {item}</Dropdown.Item>
+                                            )
+                                        })}
+                                        </DropdownButton>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div className="form-row ml-3 text-center">
+                    {/* <div className="col-sm-2 text-center"> */}
+                    <label className="row-sm-2 control-label required" htmlFor="blog_post_body">From</label>
+                    <div className="row-sm-2 ml-1">
+                        <input 
+                               id="blog_post_body"
+                               type="number"
+                               min="16"
+                               max="60"
+                               required="required"
+                               value={this.state.from}
+                               onChange={this.handleFromChange}
+                               className="form-control"/>
+                    </div>
+                    <label className="row-sm-2 control-label required ml-5" htmlFor="blog_post_body">To</label>
+                    <div className="row-sm-2 ml-1">
+                               <input 
+                               id="blog_post_body"
+                               type="number"
+                               min="16"
+                               max="60"
+                               required="required"
+                               value={this.state.to}
+                               onChange={this.handleToChange}
+                               className="form-control"/>
+                    </div>
+                    </div>
+                </div>
+                <div className="form-group text-center" >
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-10">
+                        <button type="submit"
+                                id="blog_post_submit"
+                                className="btn-default btn"
+                                style={style}>
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
         );
     }
+}
 };

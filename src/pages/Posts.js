@@ -1,21 +1,11 @@
 import React from 'react';
 
-
-import { Card, Pagination, Container, Row, Col} from 'react-bootstrap';
-
-import FilterPosts from '../components/FilterResults';
-
-
+import { Card, Container, Row} from 'react-bootstrap';
 
 const Posts = ({ posts}) =>  {
   return (
     <Container>
-      <Row className="text-center mt-2">
-        <Col>
-          <FilterPosts/>
-        </Col>
-      </Row>
-      <Row>
+      <Row className="text-center mt-5">
       {(posts).map((post) => {
         return (
             <Card.Body key={post.id} style={{backgroundColor: 'none', width: '100%'}}>
@@ -35,21 +25,6 @@ const Posts = ({ posts}) =>  {
           )
       })}
       </Row>
-      {/* <Row>
-        <Col md={12}>
-        <Pagination className="pagination justify-content-center">
-              <Pagination.First />
-              <Pagination.Prev />
-              {(Array.from({length:pags}, (_, i) => ++i)).map((item) => {
-                return (
-                  <Pagination.Item key={item} active={item === currentP} onClick={onClick}> {item}</Pagination.Item >)
-              })}
-              {console.log(currentP)}
-              <Pagination.Next />
-              <Pagination.Last />
-          </Pagination>
-        </Col>
-      </Row> */}
     </Container>
   )
 }
