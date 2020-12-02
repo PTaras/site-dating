@@ -146,9 +146,9 @@ export default class Form extends Component {
             return <p>Loading...</p>
         } else {
         return (
-            <Container  className="themed-container" fluid={true}>
-                 <form name="blog_post" className="text-center"  onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
-            <div id="blog_post">
+            <Container>
+                 <form name="blog_post" className="form-group" onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
+                    <div id="blog_post">
                 <div className="form-group">
                     <label className="col-sm-4 control-label required" htmlFor="blog_post_title">Введите имя</label>
                     <div className="col-sm-10">
@@ -245,7 +245,7 @@ export default class Form extends Component {
                     <div className="form-row ml-3 text-center">
                     {/* <div className="col-sm-2 text-center"> */}
                     <label className="row-sm-2 control-label required" htmlFor="blog_post_body">From</label>
-                    <div className="row-sm-2 ml-1">
+                    <div className="row-sm-2">
                         <input 
                                id="blog_post_body"
                                type="number"
@@ -257,7 +257,7 @@ export default class Form extends Component {
                                className="form-control"/>
                     </div>
                     <label className="row-sm-2 control-label required ml-1" htmlFor="blog_post_body">To</label>
-                    <div className="row-sm-2 mr-5">
+                    <div className="row-sm-2">
                                <input 
                                id="blog_post_body"
                                type="number"
@@ -282,7 +282,7 @@ export default class Form extends Component {
                     </div>
                 </div>
             </div>
-        </form>
+                </form>
             </Container>
            
         );
