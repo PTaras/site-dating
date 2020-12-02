@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DropdownButton, Dropdown, Card} from 'react-bootstrap';
+import { Container  } from 'react-bootstrap';
 
 import style from '../assets/style/style.css';
 
@@ -145,7 +146,8 @@ export default class Form extends Component {
             return <p>Loading...</p>
         } else {
         return (
-            <form name="blog_post" className="form-horizontal mt-5" onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
+            <Container  className="themed-container" fluid={true}>
+                 <form name="blog_post" className="text-center"  onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
             <div id="blog_post">
                 <div className="form-group">
                     <label className="col-sm-4 control-label required" htmlFor="blog_post_title">Введите имя</label>
@@ -254,8 +256,8 @@ export default class Form extends Component {
                                onChange={this.handleFromChange}
                                className="form-control"/>
                     </div>
-                    <label className="row-sm-2 control-label required ml-5" htmlFor="blog_post_body">To</label>
-                    <div className="row-sm-2 ml-1">
+                    <label className="row-sm-2 control-label required ml-1" htmlFor="blog_post_body">To</label>
+                    <div className="row-sm-2 mr-5">
                                <input 
                                id="blog_post_body"
                                type="number"
@@ -281,6 +283,8 @@ export default class Form extends Component {
                 </div>
             </div>
         </form>
+            </Container>
+           
         );
     }
 }

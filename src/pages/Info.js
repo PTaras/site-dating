@@ -438,8 +438,8 @@ export default class Info extends Component {
                                    <Row>
                             <Col md={12}>
                             <Pagination className="pagination justify-content-center">
-                                {currentPage === 1 ? <Pagination.First disabled /> : <Pagination.First />}
-                                {currentPage === 1 ? <Pagination.Prev disabled/> : <Pagination.Prev />}
+                                {/* {currentPage === 1 ? <Pagination.First disabled /> : <Pagination.First />}
+                                {currentPage === 1 ? <Pagination.Prev disabled/> : <Pagination.Prev />} */}
                                 {(Array.from({length:countPaging}, (_, i) => ++i)).map((item) => {
                                     if (countPaging >= 3)  return (
                                         <Pagination.Item key={item} active={item === currentPage} onClick={this.handleClickPaging}> {item}</Pagination.Item >
@@ -448,8 +448,8 @@ export default class Info extends Component {
                                         <Pagination.Ellipsis /> 
                                     )
                                 })}
-                                {currentPage === countPaging ? <Pagination.Next disabled /> : <Pagination.Next />}
-                                {currentPage === countPaging ? <Pagination.Last disabled/> : <Pagination.Last />}
+                                {/* {currentPage === countPaging ? <Pagination.Next disabled /> : <Pagination.Next />}
+                                {currentPage === countPaging ? <Pagination.Last disabled/> : <Pagination.Last />} */}
                             </Pagination>
                             </Col>
                         </Row>
