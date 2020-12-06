@@ -8,7 +8,7 @@ const Posts = ({ posts}) =>  {
       <Row className="text-center mt-5">
       {(posts).map((post) => {
         return (
-            <Card.Body key={post.id} style={{backgroundColor: 'none', width: '100%'}}>
+            <Card.Body key={post.id} style={{backgroundColor: 'none', width: '100%', height: '100%', opacity: 'none'}}>
                 <Card className="text-center">
                     <Card.Header> 
                       <b style={{float: "left"}}>{post.title} ({post.city}) </b>

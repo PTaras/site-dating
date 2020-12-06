@@ -2,3 +2,12 @@
     background-color: #4CAF50;
     text-align: center;
 }
+
+.themed-container {
+    background-image: url("../img/backGround.jpg");
+}
+
+.form-submit {
+    /* background-image: url("../img/send.jpg"); */
+    opacity: 90%;
+}

@@ -6,6 +6,7 @@ import Posts from './Posts';
 import '../../node_modules/nouislider/distribute/nouislider.min.css';
 import '../../node_modules/nouislider/src/nouislider.tooltips.less';
 import '../../node_modules/nouislider/src/nouislider.pips.less';
+import style from '../assets/style/style.css';
 
 export default class Info extends Component {
     constructor(props) {
@@ -83,7 +84,6 @@ export default class Info extends Component {
 
     handleChangeCity(e) {
         e.preventDefault();
-        // console.log("city", this.state.city);
         const data = {
             "filter_": {
               "city": e.target.value,
@@ -128,10 +128,6 @@ export default class Info extends Component {
 
       handleChangeLooking(e) {
         e.preventDefault();
-        // console.log("look",this.state.looking);
-        // console.log("this.state.age_from",this.state.age_from);
-        // console.log("this.state.age_to",this.state.age_to);
-        // console.log("this.state.city",this.state.city);
         const data = {
             "filter_": {
               "city": this.state.city,
@@ -224,8 +220,6 @@ export default class Info extends Component {
 
       handleChangeAgeTo(e) {
         e.preventDefault();
-        // console.log("age_to_to", this.state.age_to);
-        // console.log("age_to_from", this.state.age_from);
         if (e.target.value >= 16 || e.target.value <= 60) {
             const data = {
                 "filter_": {
@@ -257,7 +251,7 @@ export default class Info extends Component {
                             filteredCity: result.posts,
                             who_is_looking: result.aviable_items.whoes_is_looking_whoms,
                             age_from: result.filter.desired_age_from,
-                            // age_to: result.filter.desired_age_to
+                            age_to: result.filter.desired_age_to,
                             age_to: e.target.value
                         }, );
                     },
@@ -274,9 +268,6 @@ export default class Info extends Component {
       };
 
       handleClickPaging(e) {
-        // e.preventDefault();
-        console.log("page", e.target.text, this.state.currentPage);
-        
             const data = {
                 "filter_": {
                   "city": this.state.city,
@@ -340,14 +331,14 @@ export default class Info extends Component {
             return <p>Loading...</p>
         } else {
             return (
-                <Container className="themed-container" fluid={true} style={{backgroundColor: 'grey'}}> 
-                    <Row>
+                <Container className="themed-container" fluid={true} style={{style}}> 
+                    <Row style={{opacity: '70%'}}>
                         <Col md="3" className="text-center mt-5">
-                            <h5 className="text-center mt-5">Filters</h5>
+                            <h4 className="text-center mt-5" style={{color: 'red', backgroundColor: 'none'}}>Фильтры</h4>
                             <Card>
                             <ListGroup>
                             <Nav.Link eventKey="Age">
-                            <h5 className="text-center mt-4">Возраст:</h5>
+                            <h5 className="text-center mt-2">Возраст:</h5>
                                     <ListGroup.Item style ={{height: "60px"}}>
                                     <form>
                                         <label>
@@ -360,31 +351,7 @@ export default class Info extends Component {
                                         <input type="number" min="16"
                                                 max="60" onChange={this.handleChangeAgeTo} />
                                         </label>
-                                        {/* <input type="submit" value="Отправить" /> */}
                                     </form>
-                                        {/* <Nouislider 
-                                            onChange={this.handleChangeAge}
-                                            // value = {this.state.age_from}
-                                            start={value}
-                                            range={{min: 0, max: 100}}
-                                            start={[this.state.age_from, this.state.age_to]}
-                                            step={1}
-                                            connect ={true}
-                                            tooltips = {true}
-                                            format= {{
-                                                to: function ( value ) {
-                                                  return Math.round(value);
-                                                },
-                                                from: function ( value ) {
-                                                  return Math.round(value);
-                                            }}}
-                                            pips= {{
-                                                mode: 'positions',
-                                                values: [0, 25, 50, 75, 100],
-                                                // density: 5
-                                            }}
-                                              />  */}
-                                        
                                         
                                     </ListGroup.Item>
                                     </Nav.Link>
@@ -428,11 +395,8 @@ export default class Info extends Component {
                                 </ListGroup>
                             </Card>
                         </Col>
-                        <Col md="9">
+                        <Col md="9" style={{marginTop: '63px'}}> 
                             <Posts 
-                                    // onClick = {this.handleClickPaging}
-                                    // currentP = {this.state.currentPage}
-                                    // pags = {this.state.countPaging}
                                    posts={this.state.filteredCity} 
                                    onChange={this.filterCity}/>
                                    <Row>

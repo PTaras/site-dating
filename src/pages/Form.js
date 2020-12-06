@@ -125,16 +125,35 @@ export default class Form extends Component {
     }
 
     handleSubmit = (e) => {
-        // e.preventDefault();
         this.props.onSubmit(this.state.who_is_looking);
-        alert("Post sibmit!!!");
+            return (
+                <div class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Modal body text goes here.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+            )
     }
     
     render() {
         const { error, isLoaded, who_is_looking, allCities } = this.state;
         if (error) {
             return ( 
-                <Card border="primary" className="text-center"  style={{ width: '18rem', display: 'flex', margin: '100px auto' }}>
+                <Card border="primary" className="text-center" style={{ width: '18rem', display: 'flex', margin: '100px auto' }}>
                     <Card.Header>Error</Card.Header>
                     <Card.Body>
                     <Card.Text>
@@ -147,7 +166,7 @@ export default class Form extends Component {
         } else {
         return (
             <Container>
-                 <form name="blog_post" className="form-group" onSubmit={this.handleSubmit} style={{backgroundColor:"grey"}}>
+                 <form name="blog_post" className="form-group" onSubmit={this.handleSubmit} style={{backgroundColor:"grey",  margin: '100px auto 50px auto'}}>
                     <div id="blog_post">
                 <div className="form-group">
                     <label className="col-sm-4 control-label required" htmlFor="blog_post_title">Введите имя</label>
@@ -270,14 +289,14 @@ export default class Form extends Component {
                     </div>
                     </div>
                 </div>
-                <div className="form-group text-center" >
+                <div className="form-group text-center">
                     <div className="col-sm-2"></div>
                     <div className="col-sm-10">
                         <button type="submit"
                                 id="blog_post_submit"
                                 className="btn-default btn"
                                 style={style}>
-                            Submit
+                            Отправить на валидацию
                         </button>
                     </div>
                 </div>
