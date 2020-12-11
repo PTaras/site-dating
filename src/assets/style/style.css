@@ -5,9 +5,13 @@
 
 .themed-container {
     background-image: url("../img/backGround.jpg");
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
 }
 
 .form-submit {
-    /* background-image: url("../img/send.jpg"); */
     opacity: 90%;
 }

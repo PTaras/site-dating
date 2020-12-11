@@ -6,7 +6,7 @@ import './index.css';
 
 const App = () => {
   return (
-      <div className="main-container" >
+      <div className="main-container"  >
         <Header />
       </div>
   )
