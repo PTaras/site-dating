@@ -3,7 +3,7 @@
 // * snip *
 
 export function createPost(data) {
-    return fetch('http://127.0.0.1:8000/add_post/', {
+    return fetch('https://meetyoursweet.com.ua/add_post/', {
         method: 'POST',
         // mode: 'CORS',
         body: JSON.stringify(data),

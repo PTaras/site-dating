@@ -47,7 +47,7 @@ export default class Info extends Component {
               "page": 1
             }
           };
-        fetch('http://127.0.0.1:8000/posts/', {
+        fetch('https://meetyoursweet.com.ua/posts/', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -95,7 +95,7 @@ export default class Info extends Component {
               "page": 1
             }
           };
-        fetch('http://127.0.0.1:8000/posts/', {
+        fetch('https://meetyoursweet.com.ua/posts/', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -139,7 +139,7 @@ export default class Info extends Component {
               "page": 1
             }
           };
-        fetch('http://127.0.0.1:8000/posts/', {
+        fetch('https://meetyoursweet.com.ua/posts/', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -184,7 +184,7 @@ export default class Info extends Component {
                   "page": 1
                 }
               };
-            fetch('http://127.0.0.1:8000/posts/', {
+            fetch('https://meetyoursweet.com.ua/posts/', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -232,7 +232,7 @@ export default class Info extends Component {
                   "page": 1
                 }
               };
-            fetch('http://127.0.0.1:8000/posts/', {
+            fetch('https://meetyoursweet.com.ua/posts/', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -279,7 +279,7 @@ export default class Info extends Component {
                   "page": e.target.text
                 }
               };
-            fetch('http://127.0.0.1:8000/posts/', {
+            fetch('https://meetyoursweet.com.ua/posts/', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
